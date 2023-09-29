@@ -46,4 +46,4 @@ Follow these steps to get the project up and running on your local machine:
 1. **Clone the Repository**:
 
    ```bash
-   git clone https://bitbucket.org/yourusername/payment-gateway.git
+   git clone https://bitbucket.org/HamzaIsmailSiddiqi/zap-payment-gateway.git
