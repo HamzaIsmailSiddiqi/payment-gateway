@@ -1,0 +1,64 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: api-gateway
+  main:
+    allow-circular-references: true
+    web-application-type: reactive
+  config:
+    import: optional:configserver:http://localhost:8888
+  cloud:
+    gateway:
+      routes:
+        - id: token-service
+          uri: http://zap-token-service:8081/
+          predicates:
+            - Path=/api/token/**
+          filters:
+            - AuthenticationFilter
+        - id: auth-service
+          uri: http://zap-auth-service:8082/
+          predicates:
+            - Path=/api/auth/**
+          filters:
+            - AuthenticationFilter
+        - id: user-service
+          uri: http://zap-user-service:8083/
+          predicates:
+            - Path=/api/user/**
+          filters:
+            - AuthenticationFilter
+        - id: otp-service
+          uri: http://zap-otp-service:8084/
+          predicates:
+            - Path=/api/otp/**
+          filters:
+            - AuthenticationFilter
+
+    config:
+      uri: http://localhost:8888
+      fail-fast: false
+      retry:
+        maxAttempts: 20
+
+eureka:
+  client:
+    registerWithEureka: false
+    fetchRegistry: true
+    server:
+      waitTimeInMsWhenSyncEmpty: 0
+    enabled: true
+    serviceUrl:
+      defaultZone: http://zap-discovery-service:8761/eureka
+  instance:
+    prefer-ip-address: true
+
+
+feign:
+  hystrix:
+    enabled=true:
+
+logging:
+  level:
+    '[org.springframework.cloud.gateway]': TRACE
